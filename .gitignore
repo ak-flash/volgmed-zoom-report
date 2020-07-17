@@ -1,0 +1,6 @@
+*.rar
+*.zip
+logs.txt
+my_auth.php
+composer.lock
+composer.json
