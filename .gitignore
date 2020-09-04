@@ -1,6 +1,8 @@
 *.rar
 *.zip
+vendor
+.idea
 logs.txt
-my_auth.php
+config.php
 composer.lock
 composer.json

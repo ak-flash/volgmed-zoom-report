@@ -25,7 +25,7 @@ include('load.php');
 
   <script>
 
-function downloadPdf(uid,ftype,topic,name,duration) { 
+function downloadPdf(uid,ftype,topic,name,duration,token) {
 $('.modal').modal('show');
 
 $.ajax({
@@ -38,7 +38,7 @@ $.ajax({
 			date: $('#InputDate').val(),
 			name: name,
 			duration: duration,
-			token: 2
+			token: token
         },
         xhrFields: {
             responseType: 'blob'
@@ -83,13 +83,13 @@ $.ajax({
   <div class="card">
     <div class="card-body mx-auto">
 
-<?php if ($debug==1) print('<div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
+<?php if (DEBUG_NOTIFY==1) print('<div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
   <strong>Ведутся технические работы.</strong> Возможны перебои в работе.
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button></div>'); ?>
 
-<div class="alert alert-success text-center" role="alert"><b>Резервный сервер:</b> <a href="http://volgmed.ak-vps.tk/all_meetings.php"><b>volgmed.ak-vps.tk</b></a></div>
+<div class="alert alert-success text-center" role="alert"><b>Резервный сервер:</b> <a href="http://volgmed2.ak-vps.tk/"><b>volgmed2.ak-vps.tk</b></a></div>
 
 	  
 <form action="#" method="POST" class="form-inline mx-3">
@@ -119,9 +119,12 @@ $date_end=$_POST['date_end'];
 
 $total_num=0;
 $x=0;
-while ($x++<18) {
+while ($x++<=67) {
 if($x!=2){
 
+if($x<=18) {
+
+    $ajax_report_token = 'volgmed';
 
 switch($x){
 	case 1:
@@ -176,9 +179,12 @@ switch($x){
         $user='volggmu18@bk.ru';
         break;
 }
+} else {
+    $ajax_report_token = 'exam';
+    $user='exam'.($x+12).'@volgmed.ru';
+}
 
-
-$result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date_end);
+$result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date_end, $ajax_report_token);
 
 if(isset($result['code'])){
 
@@ -232,7 +238,7 @@ foreach($result['meetings'] as $key=>$value)
 		printf('(%02d:%02d)', $hours, $minutes);
 		}
 		
-	  	echo '</td><td class="text-center"><button type="button" class="btn btn-success report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',1,\''.str_replace("'", "-", $value['topic']).'\',\''.$user_name.'\','.$value['duration'].')">Excel</button> <!--- &nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button> ---></td>
+	  	echo '</td><td class="text-center"><button type="button" class="btn btn-success report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',1,\''.str_replace("'", "-", $value['topic']).'\',\''.$user_name.'\','.$value['duration'].', \''.$ajax_report_token.'\')">Excel</button> <!--- &nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button> ---></td>
     </tr>';
 	
 	$num++;
@@ -260,7 +266,7 @@ echo '<tr>
 } 
 
 echo '<tr class="table-success" style="padding-top:15px;">
-      <th colspan="4" class="text-center h4">Всего конференций за день: <b>'.$total_num.'</b></th><td class="text-center" colspan="2">Общий отчёт:&nbsp;&nbsp;<button type="button" class="btn btn-success report_btn" onclick="downloadPdf(0,3,0)" disabled>Excel</button>&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(0,4,0)" disabled>Word</button></td>
+      <th colspan="4" class="text-center h4">Всего конференций за день: <b>'.$total_num.'</b></th><td class="text-center" colspan="2"><!-- Общий отчёт:&nbsp;&nbsp;<button type="button" class="btn btn-success report_btn" onclick="downloadPdf(0,3,0)" disabled>Excel</button>&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(0,4,0)" disabled>Word</button> --!> </td>
        </tr></tbody>
 </table>
 <div class="text-justify mb-3 mx-4">* - данная цифра может не соответствовать реальному количеству участников, здесь указано количество подключений к лекции каждого студента (один студент может быть посчитан несколько раз,если он отключается и заходит снова в конференцию). В файле отчёта будет указано реальное кол-во студентов<br>

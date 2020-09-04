@@ -1,17 +1,13 @@
 <?php
 session_start();
 
-$passwd="volgmed";
+$passwd=["kafedra","boss"];
 
 if(isset($_POST['submit_pass']) && $_POST['pass'])
 {
- $pass=$_POST['pass'];
- if($pass==$passwd)
- {
-  $_SESSION['password']=$pass;
- }
- else
- {
+ if(in_array($_POST['pass'], $passwd)) {
+  $_SESSION['password']=$_POST['pass'];
+ } else {
   $error="Неверный пароль";
  }
 }
@@ -30,12 +26,10 @@ if(isset($_GET['page_logout']))
 <div id="wrapper">
 
 <?php
-if(isset($_SESSION['password'])&&$_SESSION['password']==$passwd)
-{
-header('Location: all_meetings.php');
-
-}
-else
+if(isset($_SESSION['password'])) {
+    if($_SESSION['password']==$passwd[0]) header('Location: index.php');
+    if($_SESSION['password']==$passwd[1]) header('Location: all_meetings.php');
+} else
 {
  ?>
  <form method="post" action="login.php" id="login_form">

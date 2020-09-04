@@ -1,5 +1,15 @@
 <?php
-include('load.php'); 
+session_start();
+
+//unset($_SESSION['password']);
+
+if(!isset($_SESSION['password']))
+{
+    header('Location: login.php');
+    exit;
+}
+
+require('load.php');
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
@@ -17,44 +27,45 @@ include('load.php');
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
 
-  <script>
+<script>
 
-function downloadPdf(uid,ftype,topic,name,duration) { 
-$('.modal').modal('show');
+function downloadPdf(uid,ftype,topic,name,duration,token) {
 
-$.ajax({
-        url: 'report.php',
-        method: 'POST',
-        data:{
-            uid: uid,
-			ftype: ftype,
-            topic: topic,
-			date: $('#InputDate').val(),
-			name: name,
-			duration: duration,
-			token: 2
-        },
-        xhrFields: {
-            responseType: 'blob'
-        }, 
-		success: function (data) {
-            var a = document.createElement('a');
-            var url = window.URL.createObjectURL(data);
-            a.href = url;
-            
-			if(ftype==1) $file_end='xlsx';
-			if(ftype==2) $file_end='pdf';
-			
-			a.download = $('#InputDate').val()+' Лекция.'+topic+' Cписок студентов.'+$file_end;
-            
-			document.body.append(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-			
-			$('.modal').modal('hide');
-        }
-    });
+    $('.modal').modal('show');
+
+    $.ajax({
+            url: 'report.php',
+            method: 'POST',
+            data:{
+                uid: uid,
+                ftype: ftype,
+                topic: topic,
+                date: $('#InputDate').val(),
+                name: name,
+                duration: duration,
+                token: token
+            },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (data) {
+                var a = document.createElement('a');
+                var url = window.URL.createObjectURL(data);
+                a.href = url;
+
+                if(ftype==1) $file_end='xlsx';
+                if(ftype==2) $file_end='pdf';
+
+                a.download = $('#InputDate').val()+' Лекция.'+topic+' Cписок студентов.'+$file_end;
+
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+                $('.modal').modal('hide');
+            }
+        });
 
     return false;
 }
@@ -76,7 +87,7 @@ $.ajax({
   <div class="card">
     <div class="card-body mx-auto">
 	
-<?php if ($debug==1) print('<div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
+<?php if (DEBUG_NOTIFY==1) print('<div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
   <strong>Ведутся технические работы.</strong> Возможны перебои в работе.
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -89,14 +100,19 @@ $.ajax({
 <label for="InputUser">Выберите логин в ZOOM </label>
 
 
-<select type="email" class="form-control mx-3" id="InputUser" name="user">
+<select type="email" class="form-control mx-3" id="InputUser" name="user" style="width:170px">
 <?php
-for ($x=1; $x<19; $x++) {
-	
+for ($x=1; $x<=18; $x++) {
 	if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
 	echo '<option value="'.$x.'" selected>volg***'.$x.'@***.ru</option>';
-	
 	} else if($x!=2) echo '<option value="'.$x.'">volg***'.$x.'@***.ru</option>';
+}
+
+for ($x=30; $x<=78; $x++) {
+    if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
+        echo '<option value="'.$x.'" selected>exam**'.$x.'@vol****.ru</option>';
+    } else
+        echo '<option value="'.$x.'">exam**'.$x.'@vol****.ru</option>';
 }
 ?>
 
@@ -113,66 +129,83 @@ for ($x=1; $x<19; $x++) {
 </div>
 <?php
 
-if (isset($_POST['user'])&&$_POST['user']!="") {
-	
+if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST["user"] != 0) {
+//$zoom_login_volmed_mailru_ids = [1, 3, 4, 5, 7];
+//$zoom_login_volmed_bkru_ids = [6, 8, 9, 10, 7];
+//$zoom_login_volmed_bkru_ids = [10, 11];
+//for ($x=1; $x<19; $x++) {
+//    if(in_array($x, $zoom_login_volmed_mailru_ids)) $zoom_login[$x] = "volgmed1@mail.ru";
+//}
+if((int)$_POST["user"] <= 18) {
 
-switch((int)$_POST['user']){
-	case 1:
-        $user='volgmed1@mail.ru';
-        break;
-	case 3:
-        $user='volgmed3@mail.ru';
-        break;
-	case 4:
-        $user='volgmed4@mail.ru';
-        break;
-	case 5:
-        $user='volgmed5@mail.ru';
-        break;
-	case 6:
-        $user='volgmed6@bk.ru';
-        break;
-	case 7:
-        $user='volggmu7@mail.ru';
-        break;
-	case 8:
-        $user='volgmed8@bk.ru';
-        break;
-	case 9:
-        $user='volggmu9@bk.ru';
-        break;	
-	case 10:
-        $user='volggmu10@bk.ru';
-        break;
-	case 11:
-        $user='volggmu11@bk.ru';
-        break;
-	case 12:
-        $user='volggmu12@bk.ru';
-        break;
-	case 13:
-        $user='volggmu13@bk.ru';
-        break;
-	case 14:
-        $user='volggmu14@bk.ru';
-        break;
-	case 15:
-        $user='volggmu15@bk.ru';
-        break;
-	case 16:
-        $user='volggmu16@bk.ru';
-        break;
-	case 17:
-        $user='volggmu17@bk.ru';
-        break;
-	case 18:
-        $user='volggmu18@bk.ru';
-        break;
+    $ajax_report_token = 'volgmed';
+
+    switch((int)$_POST["user"]){
+        case 1:
+            $user='volgmed1@mail.ru';
+            break;
+        case 3:
+            $user='volgmed3@mail.ru';
+            break;
+        case 4:
+            $user='volgmed4@mail.ru';
+            break;
+        case 5:
+            $user='volgmed5@mail.ru';
+            break;
+        case 6:
+            $user='volgmed6@bk.ru';
+            break;
+        case 7:
+            $user='volggmu7@mail.ru';
+            break;
+        case 8:
+            $user='volgmed8@bk.ru';
+            break;
+        case 9:
+            $user='volggmu9@bk.ru';
+            break;
+        case 10:
+            $user='volggmu10@bk.ru';
+            break;
+        case 11:
+            $user='volggmu11@bk.ru';
+            break;
+        case 12:
+            $user='volggmu12@bk.ru';
+            break;
+        case 13:
+            $user='volggmu13@bk.ru';
+            break;
+        case 14:
+            $user='volggmu14@bk.ru';
+            break;
+        case 15:
+            $user='volggmu15@bk.ru';
+            break;
+        case 16:
+            $user='volggmu16@bk.ru';
+            break;
+        case 17:
+            $user='volggmu17@bk.ru';
+            break;
+        case 18:
+            $user='volggmu18@bk.ru';
+            break;
+    }
+
+} else  if((int)$_POST["user"] <= 54) {
+    $ajax_report_token = 'exam30_54';
+    $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
+} else {
+    $ajax_report_token = 'exam55_78';
+    $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
 }
+
 
 $date=$_POST['date'];
 
-$result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date);
+$result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date, $ajax_report_token);
 //var_dump($result);
 
 if(isset($result['code'])){
@@ -210,9 +243,10 @@ foreach($result['meetings'] as $key=>$value)
 	 
 	 if($value['user_name']=='') $user_name=$user; else $user_name=$value['user_name'];
 	 
-	echo '<td class="text-center"><button type="button" class="btn btn-success report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',1,\''.str_replace("'", "-", $value['topic']).'\',\''.$user_name.'\','.$value['duration'].')">Excel</button>&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button></td>
+	echo '<td class="text-center"><button type="button" class="btn btn-success report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',1,\''.str_replace("'", "-", $value['topic']).'\',\''.$user_name.'\','.$value['duration'].', \''.$ajax_report_token.'\')">Excel</button>
     </tr>';
-	
+
+	//&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button></td>
 
 //$value['uuid']
 

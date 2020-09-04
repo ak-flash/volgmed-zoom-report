@@ -1,5 +1,8 @@
 <?php
-error_reporting(E_ALL);ini_set('display_errors',1);
+error_reporting(E_ALL);
+ini_set('display_errors',1);
+
+date_default_timezone_set('Europe/Volgograd');
 
 require 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -27,6 +30,9 @@ function sort_nested_arrays( $array, $args = array('name' => 'asc','join_time' =
 }
 
 if (isset($_POST['type'])&&$_POST['type']!="") {
+
+
+
 switch((int)$_POST['type']){
 	case 1:
         $type='xlsx';
@@ -87,7 +93,7 @@ if (isset($_POST['uid'])&&$_POST['uid']!="") {
 include('load.php');
 
 
-$result=send_api("https://api.zoom.us/v2/report/meetings/".$_POST['uid']."/participants?page_size=300");
+$result=send_api("https://api.zoom.us/v2/report/meetings/".$_POST['uid']."/participants?page_size=300", $_POST['token']);
 
 //var_dump($result);
 $sheet->setCellValue('A1', '№');
@@ -105,7 +111,7 @@ $previos_duration=0;
 
 if($result['page_count']==2){
 	
-	$result2=send_api("https://api.zoom.us/v2/report/meetings/".$_POST['uid']."/participants?page_size=300&next_page_token=".$result['next_page_token']);
+$result2=send_api("https://api.zoom.us/v2/report/meetings/".$_POST['uid']."/participants?page_size=300&next_page_token=".$result['next_page_token'], $_POST['token']);
 
 $result = array_merge_recursive($result, $result2);
 }

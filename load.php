@@ -1,37 +1,35 @@
 <?php
-
-// Настройки
-$debug=1;
-
-date_default_timezone_set('Europe/Volgograd');
-
+include('config.php');
 
 // Turn off all error reporting
-if ($debug!=1) error_reporting(0);
+if (DEBUG_NOTIFY!=1) error_reporting(0);
 
-function send_api($api_url) {
+function send_api($api_url, $ajax_report_token) {
+
+    switch($ajax_report_token){
+        case 'volgmed':
+            $jwt_zoom_login = JWT_ZOOM_TOKEN_VOLGMED;
+            break;
+        case 'exam30_54':
+            $jwt_zoom_login = JWT_ZOOM_TOKEN_EXAM_30_54;
+            break;
+        case 'exam55_78':
+            $jwt_zoom_login = JWT_ZOOM_TOKEN_EXAM_55_78;
+            break;
+    }
+
 $curl = curl_init();
 
-$api_adress="api.zoom.us";
-//$api_adress='52.202.62.238';
-
-$api_secret="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJCX1gyRVVicVQzYUZvWER1YVFYcV9nIiwiZXhwIjoiMTU5MzU2MTYwMCJ9.tWiNX5fDxq-nWMXx2lh9o8M_bu5Qra5MDGjyhHi3_Tc";
-
 curl_setopt_array($curl, array(
-  CURLOPT_URL => "https://".$api_adress."/v2".$api_url,
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_SSL_VERIFYPEER => false,
-  CURLOPT_SSL_VERIFYHOST => 0,
-  CURLOPT_DNS_USE_GLOBAL_CACHE => false,
-  CURLOPT_DNS_CACHE_TIMEOUT => 2,
-  CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "GET",
-  CURLOPT_HTTPHEADER => array(
-    "authorization: Bearer ".$api_secret,
+  CURLOPT_URL => "https://".ZOOM_API_ADRESS."/v2".$api_url,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_HTTPHEADER => array(
+    "authorization: Bearer ".$jwt_zoom_login,
     "content-type: application/json"
   ),
 ));
