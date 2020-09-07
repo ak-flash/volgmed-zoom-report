@@ -10,11 +10,11 @@ function send_api($api_url, $ajax_report_token) {
         case 'volgmed':
             $jwt_zoom_login = JWT_ZOOM_TOKEN_VOLGMED;
             break;
-        case 'exam30_54':
-            $jwt_zoom_login = JWT_ZOOM_TOKEN_EXAM_30_54;
+        case 'exam_30-60_95-120':
+            $jwt_zoom_login = JWT_ZOOM_TOKEN_EXAM_30_60_95_120;
             break;
-        case 'exam55_78':
-            $jwt_zoom_login = JWT_ZOOM_TOKEN_EXAM_55_78;
+        case 'exam_61-78':
+            $jwt_zoom_login = JWT_ZOOM_TOKEN_EXAM_61_78;
             break;
     }
 

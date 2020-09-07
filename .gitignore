@@ -4,5 +4,7 @@ vendor
 .idea
 logs.txt
 config.php
+test.php
+data.php
+receive_token.php
 composer.lock
-composer.json

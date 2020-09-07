@@ -1,8 +1,6 @@
 <?php
 session_start();
 
-//unset($_SESSION['password']);
-
 if(!isset($_SESSION['password']))
 {
     header('Location: login.php');
@@ -74,14 +72,13 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
 </script>
 
 </head>
-<body class="">
+<body>
 <div class="row" style="margin-right:0;">
-          <div class="col-8 d-block mx-auto ">
-		  
+          <div class="col-10 col-md-8 d-block mx-auto "> 
 
-  <div class="login-logo text-center my-4">
+  <div class="text-center my-4">
     
-   <h3>Получить отчет о посещении лекций <b>ВолгГМУ</b></h3> 
+   <h4 class="d-inline-block">Получить отчет о посещении лекций <b>ВолгГМУ</b></h4><a href="login.php?page_logout" style="margin-left: 20px;"><img src="asserts/img/logout.png" style="height:25px;"></a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
@@ -110,10 +107,18 @@ for ($x=1; $x<=18; $x++) {
 
 for ($x=30; $x<=78; $x++) {
     if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
-        echo '<option value="'.$x.'" selected>exam**'.$x.'@vol****.ru</option>';
+        echo '<option value="'.$x.'" selected>exam'.$x.'@volgmed.ru</option>';
     } else
-        echo '<option value="'.$x.'">exam**'.$x.'@vol****.ru</option>';
+        echo '<option value="'.$x.'">exam'.$x.'@volgmed.ru</option>';
 }
+
+for ($x=95; $x<=120; $x++) {
+    if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
+        echo '<option value="'.$x.'" selected>exam'.$x.'@volgmed.ru</option>';
+    } else
+        echo '<option value="'.$x.'">exam'.$x.'@volgmed.ru</option>';
+}
+
 ?>
 
 </select>
@@ -124,7 +129,7 @@ for ($x=30; $x<=78; $x++) {
   </div>
 
  
-<button type="submit" class="btn btn-primary mx-2">Показать</button>
+<button type="submit" class="btn btn-success mx-2">Показать</button>
 </div>
 </div>
 <?php
@@ -136,7 +141,7 @@ if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST["user"] != 0) {
 //for ($x=1; $x<19; $x++) {
 //    if(in_array($x, $zoom_login_volmed_mailru_ids)) $zoom_login[$x] = "volgmed1@mail.ru";
 //}
-if((int)$_POST["user"] <= 18) {
+if((int)$_POST["user"]>=1&&(int)$_POST["user"]<=18) {
 
     $ajax_report_token = 'volgmed';
 
@@ -194,14 +199,22 @@ if((int)$_POST["user"] <= 18) {
             break;
     }
 
-} else  if((int)$_POST["user"] <= 54) {
-    $ajax_report_token = 'exam30_54';
-    $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
-} else {
-    $ajax_report_token = 'exam55_78';
+} 
+
+if((int)$_POST["user"]>=30&&(int)$_POST["user"]<=60) {
+    $ajax_report_token = 'exam_30-60_95-120';
     $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
 }
 
+if((int)$_POST["user"]>=61&&(int)$_POST["user"]<=78) {
+    $ajax_report_token = 'exam_61-78';
+    $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
+}
+
+if((int)$_POST["user"]>=95&&(int)$_POST["user"]<=120) {
+    $ajax_report_token = 'exam_30-60_95-120';
+    $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
+}
 
 $date=$_POST['date'];
 
@@ -258,12 +271,21 @@ echo '<tr class="table-success" style="padding-top:10px;">
 	   
 echo ' </tbody>
 </table>
-<div class="text-justify mb-3 mx-4">* скрыты конференции продолжительностью менее 25 минут и с количеством участников менее 10 человек<br>** данная цифра может не соответствовать реальному количеству участников, здесь указано количество подключений к лекции каждого студента (один студент может быть посчитан несколько раз,если он отключается и заходит снова в конференцию). В файле отчёта будет указано реальное кол-во студентов<br>
+<div class="text-justify mb-3 mx-4">* скрыты конференции продолжительностью менее 25 минут и с количеством участников менее 10 человек<br>** данная цифра может не соответствовать реальному количеству участников, здесь указано количество подключений к лекции каждого студента (один студент может быть посчитан несколько раз,если он отключается и заходит снова в конференцию). <b>В файле отчёта будет указано реальное кол-во студентов</b><br>
 ! - Для последующей облегчённой автоматической обработки отчётов, рекомендуется студентам придерживаться шаблона имени в конференции:</div>
-<div class="alert alert-warning text-center my-2" style="padding-top:15px;margin: auto;width:45%;" role="alert">
+
+<table><tr><td style="width: 400px;">
+<div class="alert alert-warning text-center m-2" role="alert">
 <h5>(КурсГруппа Факультет) Ф.И.О.</h5>
-</div>
-<div class="text-center my-3">Пример: <b>(312 леч) Иванов А.А.</b>  (402 МБФ) Петров С.С.  (214 стом) Сидоров Я.Я. и т.д.</div>';
+  </div>
+  </td><td>
+  <div class="text-center m-2">Пример: <b>(312 леч) Иванов А.А.</b>  (402 МБФ) Петров С.С.  (214 стом) Сидоров Я.Я. и т.д.</div>
+  </td></tr>
+  </table>
+
+<small>
+  <div class="m-1 text-center">Сообщить об ошибке: <img src="asserts/img/support.jpg" alt=""></div>
+</small>';
 } 
 
 }
@@ -280,8 +302,7 @@ echo ' </tbody>
     </div>
 </div>
 
-<div class="fixed-bottom">
-  ...</div>
+
 
 </body>
 </html>

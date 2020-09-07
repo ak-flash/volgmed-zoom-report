@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['password']))
+if(!isset($_SESSION['password'])||$_SESSION['password']!='boss')
 {
 header('Location: login.php');
 exit;
@@ -77,7 +77,7 @@ $.ajax({
 
   <div class="login-logo text-center my-4">
     
-   <h3 class="d-inline-block">Получить отчет о лекциях <b>ВолгГМУ</b> за день</h3><button type="<button" class="btn btn-primary mx-5" onclick="document.location.href = 'login.php?page_logout';">Выход</button>
+   <h3 class="d-inline-block">Получить отчет о лекциях <b>ВолгГМУ</b> за день</h3><a href="login.php?page_logout" style="margin-left: 20px;"><img src="asserts/img/logout.png" style="height:25px;"></a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
@@ -119,10 +119,11 @@ $date_end=$_POST['date_end'];
 
 $total_num=0;
 $x=0;
-while ($x++<=67) {
-if($x!=2){
 
-if($x<=18) {
+while ($x++<=91) {
+
+
+if($x<=17) {
 
     $ajax_report_token = 'volgmed';
 
@@ -130,63 +131,73 @@ switch($x){
 	case 1:
         $user='volgmed1@mail.ru';
         break;
-	case 3:
+	case 2:
         $user='volgmed3@mail.ru';
         break;
-	case 4:
+	case 3:
         $user='volgmed4@mail.ru';
         break;
-	case 5:
+	case 4:
         $user='volgmed5@mail.ru';
         break;
-	case 6:
+	case 5:
         $user='volgmed6@bk.ru';
         break;
-	case 7:
+	case 6:
         $user='volggmu7@mail.ru';
         break;
-	case 8:
+	case 7:
         $user='volgmed8@bk.ru';
         break;
-	case 9:
+	case 8:
         $user='volggmu9@bk.ru';
         break;	
-	case 10:
+	case 9:
         $user='volggmu10@bk.ru';
         break;
-	case 11:
+	case 10:
         $user='volggmu11@bk.ru';
         break;
-	case 12:
+	case 11:
         $user='volggmu12@bk.ru';
         break;
-	case 13:
+	case 12:
         $user='volggmu13@bk.ru';
         break;
-	case 14:
+	case 13:
         $user='volggmu14@bk.ru';
         break;
-	case 15:
+	case 14:
         $user='volggmu15@bk.ru';
         break;
-	case 16:
+	case 15:
         $user='volggmu16@bk.ru';
         break;
-	case 17:
+	case 16:
         $user='volggmu17@bk.ru';
         break;
-	case 18:
+	case 17:
         $user='volggmu18@bk.ru';
         break;
-}
-} else {
-    $ajax_report_token = 'exam';
+  }
+
+} else if($x <= (60-12)) { // skip 12 beetwen exam17 and exam30
+    $ajax_report_token = 'exam_30-60_95-120';
     $user='exam'.($x+12).'@volgmed.ru';
+} else if($x <= (78-12)) { // skip 0 beetwen exam60 and exam61
+    $ajax_report_token = 'exam_61-78';
+    $user = 'exam'.($x+12).'@volgmed.ru';
+} else if($x <= (120-28)) { // skip 28 beetwen exam78 and exam95
+    $ajax_report_token = 'exam_30-60_95-120';
+    $user='exam'.($x+28).'@volgmed.ru';
 }
+
+
 
 $result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date_end, $ajax_report_token);
 
-if(isset($result['code'])){
+if(isset($result['code'])) 
+{
 
 echo '</div><br><div class="alert alert-danger text-center" style="margin: auto;width:45%;" role="alert"><b>Ошибка:</b> ' . $result['message'].'</div>';
 break;	
@@ -233,9 +244,11 @@ foreach($result['meetings'] as $key=>$value)
 	  echo '</td><td class="text-center">'.$value['participants_count'].'</td>
 	  <td class="text-center">'.$value['duration'].' мин. ';
 		
-		if($duration>60) {$hours = floor($duration / 60);
-		$minutes = $duration % 60;
-		printf('(%02d:%02d)', $hours, $minutes);
+		if($duration>60) 
+    {
+      $hours = floor($duration / 60);
+  		$minutes = $duration % 60;
+  		printf('(%02d:%02d)', $hours, $minutes);
 		}
 		
 	  	echo '</td><td class="text-center"><button type="button" class="btn btn-success report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',1,\''.str_replace("'", "-", $value['topic']).'\',\''.$user_name.'\','.$value['duration'].', \''.$ajax_report_token.'\')">Excel</button> <!--- &nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button> ---></td>
@@ -261,7 +274,7 @@ echo '<tr>
        </tr>';	
 
 
-}
+
 }
 } 
 
@@ -269,7 +282,7 @@ echo '<tr class="table-success" style="padding-top:15px;">
       <th colspan="4" class="text-center h4">Всего конференций за день: <b>'.$total_num.'</b></th><td class="text-center" colspan="2"><!-- Общий отчёт:&nbsp;&nbsp;<button type="button" class="btn btn-success report_btn" onclick="downloadPdf(0,3,0)" disabled>Excel</button>&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(0,4,0)" disabled>Word</button> --!> </td>
        </tr></tbody>
 </table>
-<div class="text-justify mb-3 mx-4">* - данная цифра может не соответствовать реальному количеству участников, здесь указано количество подключений к лекции каждого студента (один студент может быть посчитан несколько раз,если он отключается и заходит снова в конференцию). В файле отчёта будет указано реальное кол-во студентов<br>
+<div class="text-justify mb-3 mx-4">* - данная цифра может не соответствовать реальному количеству участников, здесь указано количество подключений к лекции каждого студента (один студент может быть посчитан несколько раз,если он отключается и заходит снова в конференцию). <b>В файле отчёта будет указано реальное кол-во студентов</b><br>
 ! - Для последующей облегчённой автоматической обработки отчётов, рекомендуется студентам придерживаться шаблона имени в конференции:
 <div class="alert alert-warning text-center my-2" style="padding-top:15px;margin: auto;width:45%;" role="alert">
 <h5>(КурсГруппа Факультет) Ф.И.О.</h5>
