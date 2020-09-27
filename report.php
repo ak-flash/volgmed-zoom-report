@@ -147,7 +147,7 @@ if (isset($_POST['uid'])&&$_POST['uid']!="") {
 include('load.php');
 
 
-$result=send_api("/report/meetings/".$_POST['uid']."/participants?page_size=300", $_POST['token']);
+$result=send_api("/report/meetings/".$_POST['uid']."/participants?page_size=300", "GET",$_POST['token']);
 
 //var_dump($result);
 $sheet->setCellValue('A'.($num_offcet-1), '№');
