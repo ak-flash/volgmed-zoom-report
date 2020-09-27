@@ -131,13 +131,15 @@ require('load.php');
 </div>
 
 </div>
-<table class="table table-striped table-responsive-md">
-    <tbody>
+
+</div>
+
+<div class="col-md-7 mx-auto">
 <?php
 
 
 
-if (isset($data->user)&&$data->user!=""&&(int)$data->user!= 0) {
+if (isset($data->user)&&$data->user!=""&&(int)$data->user!= 0&&$data->topic!=""&&$data->date!=""&&$data->time!="") {
 //$zoom_login_volmed_mailru_ids = [1, 3, 4, 5, 7];
 //$zoom_login_volmed_bkru_ids = [6, 8, 9, 10, 7];
 //$zoom_login_volmed_bkru_ids = [10, 11];
@@ -232,25 +234,32 @@ echo '<br><div class="alert alert-danger text-center" style="margin: auto;width:
 }  else {
 
     
-    echo "<tr><th>Логин Zoom: </th><td>".$result['host_email']."</td></tr>";
+    echo "<table class='table table-striped table-responsive-md'>
+    <tbody><tr><th>Логин Zoom: </th><td>".$result['host_email']."</td></tr>";
     echo "<tr><th>Название: </th><td>".$result['topic']."</td></tr>";
     echo "<tr><th>Идентификатор конференции: </th><td>".wordwrap($result['id'], 3 , ' ' , true )."</td></tr>";
     
     echo "<tr><th>Ссылка для студентов: </th><td><a href='".$result['join_url']."'>".$result['join_url']."</a></td></tr>";
     echo "<tr><th>Пароль для студентов: </th><td>".$result['password']."</td></tr>";
     
-    echo "<tr class='table-danger'><th>Прямая ссылка на запуск конференции без входа в аккаунт: </th><td><a href='".$result['start_url']."'>(для лектора только)</a></td></tr>";
+    echo "<tr class='table-danger'><th>Прямая ссылка на запуск конференции без входа в аккаунт: </th><td><a href='".$result['start_url']."'>(для лектора только)</a></td></tr></tbody>
+    </table>";
 } 
 
+} else {
+    echo '<div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
+    Заполните информацию о лекции.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button></div>';
 }
 ?>
 
        
-    </tbody>
-</table>
+    
 
+</div>
 
-
-</div>  
+  
 </body>
 </html>
