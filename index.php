@@ -89,7 +89,11 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button></div>'); ?>
-	  
+
+<div class="alert alert-warning text-center alert-dismissible fade show" role="alert">
+Новый функционал: <a href="planner.php"><strong>Планирование лекций в Zoom</strong></a> <small>Тестовая версия, возможны ошибки.</small>
+</div>
+
 <form action="#" method="POST" class="form-inline mx-3">
 
 <div class="form-group ">
@@ -218,7 +222,7 @@ if((int)$_POST["user"]>=95&&(int)$_POST["user"]<=120) {
 
 $date=$_POST['date'];
 
-$result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date, $ajax_report_token);
+$result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date, "GET", $ajax_report_token);
 //var_dump($result);
 
 if(isset($result['code'])){

@@ -98,7 +98,7 @@ if (isset($_POST['uid'])&&$_POST['uid']!="") {
 include('load.php');
 
 
-$result=send_api("https://api.zoom.us/v2/report/meetings/".$_POST['uid']."/participants?page_size=300", $_POST['token']);
+$result=send_api("https://api.zoom.us/v2/report/meetings/".$_POST['uid']."/participants?page_size=300", "GET", $_POST['token']);
 
 //var_dump($result);
 $sheet->setCellValue('A1', '№');
@@ -116,7 +116,7 @@ $previos_duration=0;
 
 if($result['page_count']==2){
 	
-$result2=send_api("https://api.zoom.us/v2/report/meetings/".$_POST['uid']."/participants?page_size=300&next_page_token=".$result['next_page_token'], $_POST['token']);
+$result2=send_api("https://api.zoom.us/v2/report/meetings/".$_POST['uid']."/participants?page_size=300&next_page_token=".$result['next_page_token'], "GET", $_POST['token']);
 
 $result = array_merge_recursive($result, $result2);
 }

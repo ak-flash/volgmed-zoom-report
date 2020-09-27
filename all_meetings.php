@@ -194,7 +194,7 @@ switch($x){
 
 
 
-$result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date_end, $ajax_report_token);
+$result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date_end, "GET",$ajax_report_token);
 
 if(isset($result['code'])) 
 {

@@ -4,7 +4,7 @@ include('config.php');
 // Turn off all error reporting
 if (DEBUG_NOTIFY!=1) error_reporting(0);
 
-function send_api($api_url, $ajax_report_token) {
+function send_api($api_url, $api_data, $ajax_report_token) {
 
     switch($ajax_report_token){
         case 'volgmed':
@@ -20,19 +20,36 @@ function send_api($api_url, $ajax_report_token) {
 
 $curl = curl_init();
 
-curl_setopt_array($curl, array(
-  CURLOPT_URL => "https://".ZOOM_API_ADRESS."/v2".$api_url,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => "",
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 30,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => "GET",
-    CURLOPT_HTTPHEADER => array(
-    "authorization: Bearer ".$jwt_zoom_login,
-    "content-type: application/json"
-  ),
-));
+if($api_data=="GET") {
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://".ZOOM_API_ADRESS."/v2".$api_url,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => array(
+      "authorization: Bearer ".$jwt_zoom_login,
+      "content-type: application/json"
+    ),
+  ));
+} else {
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://".ZOOM_API_ADRESS."/v2".$api_url,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_POST => true,
+      CURLOPT_POSTFIELDS => json_encode($api_data),
+      CURLOPT_HTTPHEADER => array(
+      "authorization: Bearer ".$jwt_zoom_login,
+      "content-type: application/json"
+    ),
+  ));
+}
 
 $response = curl_exec($curl);
 $err = curl_error($curl);
