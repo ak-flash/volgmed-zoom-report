@@ -76,12 +76,14 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
 <div class="row" style="margin-right:0;">
           <div class="col-10 col-md-8 d-block mx-auto "> 
 
-  <div class="text-center my-4">
-    
-   <h4 class="d-inline-block">Получить отчет о посещении лекций <b>ВолгГМУ</b></h4><a href="login.php?page_logout" style="margin-left: 20px;"><img src="asserts/img/logout.png" style="height:25px;"></a>
-  </div>
+
   <!-- /.login-logo -->
-  <div class="card">
+  <div class="card m-4">
+  <div class="card-header text-center">
+    
+    <h4 class="d-inline-block">Получить отчет о посещении лекций <b>ВолгГМУ</b></h4><a href="login.php?page_logout" style="margin-left: 20px;"><img src="asserts/img/logout.png" style="height:25px;"></a>
+   </div>
+   
     <div class="card-body mx-auto">
 	
 <?php if (DEBUG_NOTIFY==1) print('<div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
