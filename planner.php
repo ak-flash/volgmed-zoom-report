@@ -227,6 +227,9 @@ $payload = array("topic" => $data->topic,"type" => 2,"start_time"=>$data->date."
 $result=send_api("/users/".$user."/meetings", $payload, $ajax_report_token);
 //var_dump($result);
 
+//добавляем лог в конец файла
+file_put_contents("logs.txt", date("d/m/Y H:i:s").' Создана ЛЕКЦИЯ: '.$user.' '.$data->topic.' '.$data->date.' '.$data->time.' (IP: '.$_SERVER['REMOTE_ADDR'].')'.PHP_EOL, FILE_APPEND | LOCK_EX);
+
 if(isset($result['code'])){
 
 echo '<br><div class="alert alert-danger text-center" style="margin: auto;width:45%;" role="alert"><b>Ошибка:</b> ' . $result['message'].'</div>';	
