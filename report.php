@@ -34,7 +34,10 @@ function sort_nested_arrays( $array, $args = array('name' => 'asc','join_time' =
 	return $array;
 }
 
-if (isset($_POST['uid'])&&$_POST['uid']!="") {
+if (!empty($_POST['uid'])) {
+
+$zoom_uid = $_POST['uid'];	
+	
 switch((int)$_POST['ftype']){
 	case 1:
         $ftype='xlsx';
@@ -140,14 +143,14 @@ $sheet->getComment('H'.$comm_offcet)->setWidth("400px");
 $sheet->getComment('H'.$comm_offcet)->setHeight("300px");
 
 
-if (isset($_POST['uid'])&&$_POST['uid']!="") {
+if (!empty($_POST['uid'])) {
 
 
 	
 include('load.php');
 
 
-$result=send_api("/report/meetings/".$_POST['uid']."/participants?page_size=300", "GET",$_POST['token']);
+$result=send_api("/report/meetings/".$zoom_uid."/participants?page_size=300", "GET",$_POST['token']);
 
 //var_dump($result);
 $sheet->setCellValue('A'.($num_offcet-1), '№');
@@ -165,9 +168,9 @@ $previos_duration=0;
 
 if($result['page_count']==2){
 	
-	$result2=send_api("/report/meetings/".$_POST['uid']."/participants?page_size=300&next_page_token=".$result['next_page_token'], $_POST['token']);
+	$result2=send_api("/report/meetings/".$zoom_uid."/participants?page_size=300&next_page_token=".$result['next_page_token'], "GET", $_POST['token']);
 
-$result = array_merge_recursive($result, $result2);
+	$result = array_merge_recursive($result, $result2);
 }
 
 

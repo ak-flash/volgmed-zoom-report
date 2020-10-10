@@ -52,6 +52,9 @@ if($api_data=="GET") {
 }
 
 $response = curl_exec($curl);
+
+//var_dump($response);
+
 $err = curl_error($curl);
 
 curl_close($curl);

@@ -46,7 +46,8 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
             xhrFields: {
                 responseType: 'blob'
             },
-            success: function (data) {
+            success: function (data) { 
+				//console.log(data);
                 var a = document.createElement('a');
                 var url = window.URL.createObjectURL(data);
                 a.href = url;
