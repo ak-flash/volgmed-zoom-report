@@ -74,8 +74,9 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
 
 </head>
 <body>
-<div class="row" style="margin-right:0;">
-          <div class="col-10 col-md-8 d-block mx-auto "> 
+<div class="container-fluid">
+<div class="row">
+          <div class="col-12 col-md-8 col-xs-auto col-sm-auto d-block mx-auto "> 
 
 
   <!-- /.login-logo -->
@@ -93,18 +94,23 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
     <span aria-hidden="true">&times;</span>
   </button></div>'); ?>
 
-<div class="alert alert-warning text-center alert-dismissible fade show" role="alert">
-Новый функционал: <a href="planner.php"><strong>Планирование лекций в Zoom</strong></a> <small>Тестовая версия, возможны ошибки.</small>
+<div class="alert alert-warning text-center">
+Новый функционал: <a href="planner.php"><strong>Планирование лекций в Zoom</strong></a>
 </div>
 
 <form action="#" method="POST" class="form-inline mx-3">
 
-<div class="form-group ">
+<div class="row">
 
-<label for="InputUser">Выберите логин в ZOOM </label>
+  <div class="col-auto">
+
+<div class="form-group">
+
+<label for="InputUser">Логин в ZOOM </label>
 
 
-<select type="email" class="form-control mx-3" id="InputUser" name="user" style="width:170px">
+<select type="email" class="form-control mx-2" id="InputUser" name="user" style="width:170px;">
+<option value="0">Выберите...</option>
 <?php
 for ($x=1; $x<=18; $x++) {
 	if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
@@ -130,13 +136,21 @@ for ($x=95; $x<=120; $x++) {
 
 </select>
   </div>
-  <div class="form-group">
-    <label for="InputDate">Дата: </label>
-    <input type="date" class="form-control mx-3" id="InputDate" name="date" value="<?php if (isset($_POST['date'])&&$_POST['date']!="") { echo $_POST['date'];} else echo date("Y-m-d");?>">
+  
   </div>
 
- 
-<button type="submit" class="btn btn-success mx-2">Показать</button>
+<div class="col-auto"> 
+  
+  <div class="form-group">
+    <label for="InputDate" class="mr-2">Дата: </label>
+    <input type="date" class="form-control" id="InputDate" name="date" value="<?php if (isset($_POST['date'])&&$_POST['date']!="") { echo $_POST['date'];} else echo date("Y-m-d");?>">
+  </div>
+</div>
+ <div class="col-auto">
+<button type="submit" class="btn btn-success">Показать</button>
+
+</div>
+
 </div>
 </div>
 <?php
@@ -234,13 +248,17 @@ echo '<br><div class="alert alert-danger text-center" style="margin: auto;width:
 	
 }  else {
 
-echo  '<br><table class="table">
+echo  '<div class="row d-flex">
+
+  <div class="col-12">
+  
+  <table class="table">
   <thead class="thead-light">
     <tr>
-      <th scope="col" class=" text-center align-middle">№*</th>
+      <th scope="col" class=" text-center align-middle">№</th>
       <th scope="col" class="col-6 text-center align-middle">Название</th>
       <th scope="col" class="col-1 text-center align-middle">Время начала</th>
-      <th scope="col" class="col-2 text-center align-middle">Кол-во участников **</th>
+      <th scope="col" class="col-2 text-center align-middle">Участников **</th>
 	  <th scope="col" class="col-3 text-center align-middle">Скачать отчёт</th>
     </tr>
   </thead> <tbody>';
@@ -262,10 +280,15 @@ foreach($result['meetings'] as $key=>$value)
       <td class="text-center">'.$value['participants_count'].'</td>';
 	 
 	 if($value['user_name']=='') $user_name=$user; else $user_name=$value['user_name'];
+	 if(!empty($value['topic'])) {
+		 $topic_name=str_replace("'", "-", $value['topic']);
+		 $topic_name=str_replace('"', "", $topic_name);
+	 }
 	 
-	echo '<td class="text-center"><button type="button" class="btn btn-success report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',1,\''.str_replace("'", "-", $value['topic']).'\',\''.$user_name.'\','.$value['duration'].', \''.$ajax_report_token.'\')">Excel</button>
+	echo '<td class="text-center"><button type="button" class="btn btn-success report_btn" onclick=\'downloadPdf("'.urlencode(urlencode($value['uuid'])).'",1,"'.$topic_name.'","'.$user_name.'",'.$value['duration'].', "'.$ajax_report_token.'");\'>Excel</button>
     </tr>';
 
+	
 	//&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button></td>
 
 //$value['uuid']
@@ -278,24 +301,35 @@ echo '<tr class="table-success" style="padding-top:10px;">
 	   
 echo ' </tbody>
 </table>
+
 <div class="text-justify mb-3 mx-4">* скрыты конференции продолжительностью менее 25 минут и с количеством участников менее 10 человек<br>** данная цифра может не соответствовать реальному количеству участников, здесь указано количество подключений к лекции каждого студента (один студент может быть посчитан несколько раз,если он отключается и заходит снова в конференцию). <b>В файле отчёта будет указано реальное кол-во студентов</b><br>
 ! - Для последующей облегчённой автоматической обработки отчётов, рекомендуется студентам придерживаться шаблона имени в конференции:</div>
 
-<table><tr><td style="width: 400px;">
-<div class="alert alert-warning text-center m-2" role="alert">
-<h5>(КурсГруппа Факультет) Ф.И.О.</h5>
-  </div>
-  </td><td>
-  <div class="text-center m-2">Пример: <b>(312 леч) Иванов А.А.</b>  (402 МБФ) Петров С.С.  (214 стом) Сидоров Я.Я. и т.д.</div>
-  </td></tr>
-  </table>
+ </div>
+  
+</div>
 
-<small>
-  <div class="m-1 text-center">Сообщить об ошибке: <img src="asserts/img/support.jpg" alt=""></div>
-</small>';
+<div class="row mb-3">
+
+<div class="col-md-auto mx-auto alert alert-warning text-center mb-3" role="alert">
+<h5>(КурсГруппа Факультет) Ф.И.О.</h5>
+</div>
+<div class="col-md-auto mx-auto text-center pr-5">
+Пример: <b>(312 леч) Иванов А.А.</b>  <br>(402 МБФ) Петров С.С. <br> (214 стом) Сидоров Я.Я. и т.д.
+  </div>
+  
+</div>
+
+<div class="row">
+
+  <div class="col-12 text-center"><small>Сообщить об ошибке: <img src="asserts/img/support.jpg" alt=""></small></div>
+
+</div>';
 } 
 
-}
+} else print('<div class="alert alert-danger text-center w-50 mx-auto">
+  <strong>Выберите логин Zoom!</strong><br><small>С которого происходил запуск лекции-конференции</small>
+</div>');
 ?>
 </div></div>
 
@@ -309,7 +343,7 @@ echo ' </tbody>
     </div>
 </div>
 
-
+</div>
 
 </body>
 </html>
