@@ -49,7 +49,7 @@ switch((int)$_POST['ftype']){
 
 if((int)$_POST['ftype']==1){
 
-$filename = "report.xlsx";
+$filename = dirname(__FILE__).'/tmp/report.xlsx';
 // Смещение таблицы
 $num_offcet=7;
 
@@ -150,7 +150,7 @@ if (!empty($_POST['uid'])) {
 include('load.php');
 
 
-$result=send_api("/report/meetings/".$zoom_uid."/participants?page_size=300", "GET",$_POST['token']);
+$result=send_api("/report/meetings/".$zoom_uid."/participants?page_size=300", "GET", $_POST['token']);
 
 //var_dump($result);
 $sheet->setCellValue('A'.($num_offcet-1), '№');

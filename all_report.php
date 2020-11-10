@@ -49,7 +49,8 @@ switch((int)$_POST['type']){
 
 if((int)$_POST['type']==1){
 
-$filename = "report.xlsx";
+$filename = dirname(__FILE__).'/tmp/report.xlsx';
+
 
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
