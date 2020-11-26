@@ -88,10 +88,7 @@ $.ajax({
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button></div>'); ?>
-
-<div class="alert alert-success text-center" role="alert"><b>Резервный сервер:</b> <a href="http://volgmed2.ak-vps.tk/"><b>volgmed2.ak-vps.tk</b></a></div>
-
-	  
+  
 <form action="#" method="POST" class="form-inline mx-3">
 
 <div class="form-group">

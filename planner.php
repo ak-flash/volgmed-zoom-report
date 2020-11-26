@@ -245,8 +245,9 @@ echo '<br><div class="alert alert-danger text-center" style="margin: auto;width:
     echo "<tr><th>Ссылка для студентов: </th><td><a href='".$result['join_url']."'>".$result['join_url']."</a></td></tr>";
     echo "<tr><th>Пароль для студентов: </th><td>".$result['password']."</td></tr>";
     
-    echo "<tr class='table-danger'><th>Прямая ссылка для начала конференции: </th><td><a href='".$result['start_url']."'>Только для лектора, позволяет запустить конференцию без входа в аккаунт (ввода логина и пароля). Но только с компьютера, с которого была создана конференция.</a></td></tr></tbody>
-    </table>";
+    //echo "<tr class='table-danger'><th>Прямая ссылка для начала конференции: </th><td><a href='".$result['start_url']."'>Только для лектора, позволяет запустить конференцию без входа в аккаунт (ввода логина и пароля). Но только с компьютера, с которого была создана конференция.</a></td></tr>";
+	
+	echo "</tbody></table>";
 } 
 
 } else {
