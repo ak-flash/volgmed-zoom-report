@@ -281,9 +281,13 @@ foreach($result['meetings'] as $key=>$value)
 	 
 	 if($value['user_name']=='') $user_name=$user; else $user_name=$value['user_name'];
 	 if(!empty($value['topic'])) {
-		 $topic_name=str_replace("'", "-", $value['topic']);
-		 $topic_name=str_replace('"', "", $topic_name);
+		 $topic_name = htmlspecialchars_decode($value['topic']);
+		 $topic_name=str_replace("'", "-", $topic_name);
+		 $topic_name = str_replace('&quot;', '', $topic_name);
+		 $topic_name = str_replace('"', '', $topic_name);
 	 }
+	 
+	
 	 
 	echo '<td class="text-center"><button type="button" class="btn btn-success report_btn" onclick=\'downloadPdf("'.urlencode(urlencode($value['uuid'])).'",1,"'.$topic_name.'","'.$user_name.'",'.$value['duration'].', "'.$ajax_report_token.'");\'>Excel</button>
     </tr>';
