@@ -27,15 +27,20 @@ require('load.php');
 
 </script>
 <body>
-<div class="container col-md-8">
-  
-  
-  <div class="card m-4">
-  <div class="card-header text-center ">
-        <h4 class="d-inline-block">Запланировать лекцию (конференцию) <b>ВолгГМУ</b> в Zoom</h4><a href="login.php?page_logout" style="margin-left: 20px;"><img src="asserts/img/logout.png" style="height:25px;"></a>
-  </div>
 
-  <div class="card-body">
+
+  <!-- /.login-logo -->
+<div class="card-header text-center">
+    <h3 class="d-inline mr-4">
+    <b>ВолгГМУ</b>
+    </h3>
+    <?php $menu = 'planner'; include_once('menu.php'); ?>
+    <a href="login.php?page_logout" class="float-right my-2" >
+        <img src="asserts/img/logout.png" class="h-20">
+    </a>
+</div>
+
+  <div class="card-body mx-auto text-center">
 	
 <?php if (DEBUG_NOTIFY==1) print('<div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
   <strong>Ведутся технические работы.</strong> Возможны перебои в работе.
@@ -43,16 +48,17 @@ require('load.php');
     <span aria-hidden="true">&times;</span>
   </button></div>'); ?>
 
-<div class="alert alert-info text-center alert-dismissible fade show" role="alert">
-    <a href="index.php"><strong>Получение отчётов проведённых лекций</strong></a>
-</div>
+<h4 class="d-inline-block mb-4 text-center">
+    Запланировать лекцию (конференцию) в <b>Zoom</b>
+</h4>  
+
+<div class="container col-md-8">
 
 <form action="#" method="POST" class="mx-3">
 
 <div class="row mx-auto">
     <div class="col">
-
-            <div class="form-group ">
+            <div class="form-group text-left">
                 <label for="InputUser">Логин (ZOOM)</label>
                 <select type="email" class="form-control mx-3" id="InputUser" name="user" style="width:170px">
                 <?php
@@ -91,14 +97,14 @@ require('load.php');
     </div> 
     
     <div class="col">
-        <div class="form-group">
+        <div class="form-group text-left">
             <label for="InputDate">Дата: </label>
             <input type="date" class="form-control mx-3" id="InputDate" name="date" style="width:150px">
         </div>
     </div> 
     
     <div class="col">    
-        <div class="form-group">
+        <div class="form-group text-left">
             <label for="InputDate">Время: </label>
             <input type="time" class="form-control mx-3" id="InputTime" name="time" style="width:100px">
         </div>
@@ -109,13 +115,13 @@ require('load.php');
 
 <div class="row mt-3 mx-auto">
 <div class="col-8">
-        <div class="form-group">
+        <div class="form-group text-left">
             <label for="InputDate">Название: </label>
             <input type="text" class="form-control mx-3" id="InputTopic" name="topic">
         </div>
 </div>
 <div class="col">
-        <div class="form-group">
+        <div class="form-group text-left">
             <label for="InputDate">Пароль: </label>
             <input type="text" class="form-control mx-3" id="InputPassword" name="password" value="123" style="width:100px;">
         </div>
@@ -259,11 +265,7 @@ echo '<br><div class="alert alert-danger text-center" style="margin: auto;width:
 }
 ?>
 
-       
-    
-
 </div>
-
   
 </body>
 </html>
