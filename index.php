@@ -126,18 +126,18 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
         } else if($x!=2) echo '<option value="'.$x.'">volg***'.$x.'@***.ru</option>';
     }
 
-    for ($x=30; $x<=78; $x++) {
+    for ($x=1; $x<=20; $x++) {
         if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
             echo '<option value="'.$x.'" selected>exam'.$x.'@volgmed.ru</option>';
         } else
             echo '<option value="'.$x.'">exam'.$x.'@volgmed.ru</option>';
     }
 
-    for ($x=95; $x<=120; $x++) {
+    for ($x=60; $x<=120; $x++) {
         if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
-            echo '<option value="'.$x.'" selected>exam'.$x.'@volgmed.ru</option>';
+            echo '<option value="'.$x.'" selected>1exam'.$x.'@volgmed.ru</option>';
         } else
-            echo '<option value="'.$x.'">exam'.$x.'@volgmed.ru</option>';
+            echo '<option value="'.$x.'">1exam'.$x.'@volgmed.ru</option>';
     }
 
     ?>
@@ -230,20 +230,17 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
 
     } 
 
-    if((int)$_POST["user"]>=30&&(int)$_POST["user"]<=60) {
+    if((int)$_POST["user"]>=1&&(int)$_POST["user"]<=20) {
         $ajax_report_token = 'exam_30-60_95-120';
         $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
     }
 
-    if((int)$_POST["user"]>=61&&(int)$_POST["user"]<=78) {
+    if((int)$_POST["user"]>=60&&(int)$_POST["user"]<=120) {
         $ajax_report_token = 'exam_61-78';
-        $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
+        $user = '1exam'.(int)$_POST["user"].'@volgmed.ru';
     }
 
-    if((int)$_POST["user"]>=95&&(int)$_POST["user"]<=120) {
-        $ajax_report_token = 'exam_30-60_95-120';
-        $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
-    }
+
 
     $date=$_POST['date'];
 
