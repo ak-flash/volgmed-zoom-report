@@ -17,19 +17,14 @@ require('load.php');
     <title>Планирование лекций в Zoom</title>
 </head>
 <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
 
-<script>
-
-
-</script>
 <body>
 
-
-  <!-- /.login-logo -->
+<!-- /.login-logo -->
 <div class="card-header text-center">
     <h3 class="d-inline mr-4">
     <b>ВолгГМУ</b>
@@ -70,25 +65,21 @@ require('load.php');
         if(isset($_POST['topic'])){ $data->topic = htmlspecialchars(strip_tags($_POST['topic'])); }
         if(isset($_POST['password'])){ $data->password = htmlspecialchars(strip_tags($_POST['password'])); }
 
-                for ($x=1; $x<=18; $x++) {
+                for ($x=1; $x<=25; $x++) {
                     if (isset($data->user)&&$data->user!=""&&(int)$data->user==$x) {
-                    echo '<option value="'.$x.'" selected>volg***'.$x.'@***.ru</option>';
-                    } else if($x!=2) echo '<option value="'.$x.'">volg***'.$x.'@***.ru</option>';
+                        echo '<option value="'.$x.'" selected>1exam'.$x.'@volgmed.ru</option>';
+                    } else
+                        echo '<option value="'.$x.'">1exam'.$x.'@volgmed.ru</option>';
                 }
 
-                for ($x=1; $x<=20; $x++) {
+                for ($x=26; $x<=32; $x++) {
                     if (isset($data->user)&&$data->user!=""&&(int)$data->user==$x) {
                         echo '<option value="'.$x.'" selected>exam'.$x.'@volgmed.ru</option>';
                     } else
                         echo '<option value="'.$x.'">exam'.$x.'@volgmed.ru</option>';
                 }
 
-                for ($x=60; $x<=120; $x++) {
-                    if (isset($data->user)&&$data->user!=""&&(int)$data->user==$x) {
-                        echo '<option value="'.$x.'" selected>1exam'.$x.'@volgmed.ru</option>';
-                    } else
-                        echo '<option value="'.$x.'">1exam'.$x.'@volgmed.ru</option>';
-                }
+
 
                 ?>
 
@@ -152,75 +143,17 @@ if (isset($data->user)&&$data->user!=""&&(int)$data->user!= 0&&$data->topic!=""&
 //for ($x=1; $x<19; $x++) {
 //    if(in_array($x, $zoom_login_volmed_mailru_ids)) $zoom_login[$x] = "volgmed1@mail.ru";
 //}
-if((int)$_POST["user"]>=1&&(int)$_POST["user"]<=18) {
-
-    $ajax_report_token = 'volgmed';
-
-    switch((int)$_POST["user"]){
-        case 1:
-            $user='volgmed1@mail.ru';
-            break;
-        case 3:
-            $user='volgmed3@mail.ru';
-            break;
-        case 4:
-            $user='volgmed4@mail.ru';
-            break;
-        case 5:
-            $user='volgmed5@mail.ru';
-            break;
-        case 6:
-            $user='volgmed6@bk.ru';
-            break;
-        case 7:
-            $user='volggmu7@mail.ru';
-            break;
-        case 8:
-            $user='volgmed8@bk.ru';
-            break;
-        case 9:
-            $user='volggmu9@bk.ru';
-            break;
-        case 10:
-            $user='volggmu10@bk.ru';
-            break;
-        case 11:
-            $user='volggmu11@bk.ru';
-            break;
-        case 12:
-            $user='volggmu12@bk.ru';
-            break;
-        case 13:
-            $user='volggmu13@bk.ru';
-            break;
-        case 14:
-            $user='volggmu14@bk.ru';
-            break;
-        case 15:
-            $user='volggmu15@bk.ru';
-            break;
-        case 16:
-            $user='volggmu16@bk.ru';
-            break;
-        case 17:
-            $user='volggmu17@bk.ru';
-            break;
-        case 18:
-            $user='volggmu18@bk.ru';
-            break;
+    if((int)$_POST["user"]>=1&&(int)$_POST["user"]<=25) {
+        $ajax_report_token = 'exam_100';
+        $user = '1exam'.(int)$_POST["user"].'@volgmed.ru';
     }
 
-} 
+    if((int)$_POST["user"]>=26&&(int)$_POST["user"]<=32) {
+        $ajax_report_token = 'exam_100';
+        $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
+    }
 
-if((int)$_POST["user"]>=1&&(int)$_POST["user"]<=20) {
-    $ajax_report_token = 'exam_30-60_95-120';
-    $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
-}
 
-if((int)$_POST["user"]>=60&&(int)$_POST["user"]<=120) {
-    $ajax_report_token = 'exam_61-78';
-    $user = '1exam'.(int)$_POST["user"].'@volgmed.ru';
-}
 
 
 

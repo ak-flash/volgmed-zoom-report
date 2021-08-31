@@ -120,25 +120,27 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
     <select type="email" class="form-control mx-2" id="InputUser" name="user" style="width:170px;">
     <option value="0">Выберите...</option>
     <?php
-    for ($x=1; $x<=18; $x++) {
-        if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
-        echo '<option value="'.$x.'" selected>volg***'.$x.'@***.ru</option>';
-        } else if($x!=2) echo '<option value="'.$x.'">volg***'.$x.'@***.ru</option>';
-    }
+        /*for ($x=1; $x<=18; $x++) {
+            if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
+            echo '<option value="'.$x.'" selected>volg***'.$x.'@***.ru</option>';
+            } else if($x!=2) echo '<option value="'.$x.'">volg***'.$x.'@***.ru</option>';
+        }*/
 
-    for ($x=1; $x<=20; $x++) {
-        if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
-            echo '<option value="'.$x.'" selected>exam'.$x.'@volgmed.ru</option>';
-        } else
-            echo '<option value="'.$x.'">exam'.$x.'@volgmed.ru</option>';
-    }
+        for ($x=1; $x<=25; $x++) {
+            if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
+                echo '<option value="'.$x.'" selected>1exam'.$x.'@volgmed.ru</option>';
+            } else
+                echo '<option value="'.$x.'">1exam'.$x.'@volgmed.ru</option>';
+        }
 
-    for ($x=60; $x<=120; $x++) {
-        if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
-            echo '<option value="'.$x.'" selected>1exam'.$x.'@volgmed.ru</option>';
-        } else
-            echo '<option value="'.$x.'">1exam'.$x.'@volgmed.ru</option>';
-    }
+        for ($x=26; $x<=32; $x++) {
+            if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
+                echo '<option value="'.$x.'" selected>exam'.$x.'@volgmed.ru</option>';
+            } else
+                echo '<option value="'.$x.'">exam'.$x.'@volgmed.ru</option>';
+        }
+
+
 
     ?>
 
@@ -164,82 +166,17 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
     <?php
 
     if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST["user"] != 0) {
-    //$zoom_login_volmed_mailru_ids = [1, 3, 4, 5, 7];
-    //$zoom_login_volmed_bkru_ids = [6, 8, 9, 10, 7];
-    //$zoom_login_volmed_bkru_ids = [10, 11];
-    //for ($x=1; $x<19; $x++) {
-    //    if(in_array($x, $zoom_login_volmed_mailru_ids)) $zoom_login[$x] = "volgmed1@mail.ru";
-    //}
-    if((int)$_POST["user"]>=1&&(int)$_POST["user"]<=18) {
 
-        $ajax_report_token = 'volgmed';
 
-        switch((int)$_POST["user"]){
-            case 1:
-                $user='volgmed1@mail.ru';
-                break;
-            case 3:
-                $user='volgmed3@mail.ru';
-                break;
-            case 4:
-                $user='volgmed4@mail.ru';
-                break;
-            case 5:
-                $user='volgmed5@mail.ru';
-                break;
-            case 6:
-                $user='volgmed6@bk.ru';
-                break;
-            case 7:
-                $user='volggmu7@mail.ru';
-                break;
-            case 8:
-                $user='volgmed8@bk.ru';
-                break;
-            case 9:
-                $user='volggmu9@bk.ru';
-                break;
-            case 10:
-                $user='volggmu10@bk.ru';
-                break;
-            case 11:
-                $user='volggmu11@bk.ru';
-                break;
-            case 12:
-                $user='volggmu12@bk.ru';
-                break;
-            case 13:
-                $user='volggmu13@bk.ru';
-                break;
-            case 14:
-                $user='volggmu14@bk.ru';
-                break;
-            case 15:
-                $user='volggmu15@bk.ru';
-                break;
-            case 16:
-                $user='volggmu16@bk.ru';
-                break;
-            case 17:
-                $user='volggmu17@bk.ru';
-                break;
-            case 18:
-                $user='volggmu18@bk.ru';
-                break;
-        }
-
-    } 
-
-    if((int)$_POST["user"]>=1&&(int)$_POST["user"]<=20) {
-        $ajax_report_token = 'exam_30-60_95-120';
-        $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
-    }
-
-    if((int)$_POST["user"]>=60&&(int)$_POST["user"]<=120) {
-        $ajax_report_token = 'exam_61-78';
+    if((int)$_POST["user"]>=1&&(int)$_POST["user"]<=25) {
+        $ajax_report_token = 'exam_100';
         $user = '1exam'.(int)$_POST["user"].'@volgmed.ru';
     }
 
+    if((int)$_POST["user"]>=26&&(int)$_POST["user"]<=64) {
+        $ajax_report_token = 'exam_100';
+        $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
+    }
 
 
     $date=$_POST['date'];
@@ -247,62 +184,62 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
     $result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date, "GET", $ajax_report_token);
     //var_dump($result);
 
-    if(isset($result['code'])){
+    if($error_message){
 
-    echo '<br><div class="alert alert-danger text-center" style="margin: auto;width:45%;" role="alert"><b>Ошибка:</b> ' . $result['message'].'</div>';	
+        echo '<br><div class="alert alert-danger text-center" style="margin: auto;width:45%;" role="alert"><b>Ошибка:</b> ' . $error_message.'</div>';
         
     }  else {
 
-    echo  '<div class="row d-flex">
-
-    <div class="col-12">
+        echo  '<div class="row d-flex">
     
-    <table class="table">
-    <thead class="thead-light">
-        <tr>
-        <th scope="col" class=" text-center align-middle">№</th>
-        <th scope="col" class="col-6 text-center align-middle">Название</th>
-        <th scope="col" class="col-1 text-center align-middle">Время начала</th>
-        <th scope="col" class="col-2 text-center align-middle">Участников **</th>
-        <th scope="col" class="col-3 text-center align-middle">Скачать отчёт</th>
-        </tr>
-    </thead> <tbody>';
-    
-    foreach($result['meetings'] as $key=>$value)
-    {
+        <div class="col-12">
         
-        //$key
-        if((int)$value['duration']>25&&(int)$value['participants_count']>3){
-            
-        
+        <table class="table">
+        <thead class="thead-light">
+            <tr>
+            <th scope="col" class=" text-center align-middle">№</th>
+            <th scope="col" class="col-6 text-center align-middle">Название</th>
+            <th scope="col" class="col-1 text-center align-middle">Время начала</th>
+            <th scope="col" class="col-2 text-center align-middle">Участников **</th>
+            <th scope="col" class="col-3 text-center align-middle">Скачать отчёт</th>
+            </tr>
+        </thead> <tbody>';
 
-        $timestamp=date("H:i", strtotime($value['start_time'])); 
-        
-        echo '<tr>
-        <th scope="row">'.($key+1).'</th>
-        <td>'.$value['topic'].'</td>
-        <td class="text-center">'.$timestamp.'</td>
-        <td class="text-center">'.$value['participants_count'].'</td>';
-        
-        if($value['user_name']=='') $user_name=$user; else $user_name=$value['user_name'];
-        if(!empty($value['topic'])) {
-            $topic_name = htmlspecialchars_decode($value['topic']);
-            $topic_name=str_replace("'", "-", $topic_name);
-            $topic_name = str_replace('&quot;', '', $topic_name);
-            $topic_name = str_replace('"', '', $topic_name);
+        foreach($result['meetings'] as $key=>$value)
+        {
+
+            //$key
+            if((int)$value['duration']>25&&(int)$value['participants_count']>3){
+
+
+
+            $timestamp=date("H:i", strtotime($value['start_time']));
+
+            echo '<tr>
+            <th scope="row">'.($key+1).'</th>
+            <td>'.$value['topic'].'</td>
+            <td class="text-center">'.$timestamp.'</td>
+            <td class="text-center">'.$value['participants_count'].'</td>';
+
+            if($value['user_name']=='') $user_name=$user; else $user_name=$value['user_name'];
+            if(!empty($value['topic'])) {
+                $topic_name = htmlspecialchars_decode($value['topic']);
+                $topic_name=str_replace("'", "-", $topic_name);
+                $topic_name = str_replace('&quot;', '', $topic_name);
+                $topic_name = str_replace('"', '', $topic_name);
+            }
+
+
+
+            echo '<td class="text-center"><button type="button" class="btn btn-success report_btn" onclick=\'downloadPdf("'.urlencode(urlencode($value['uuid'])).'",1,"'.$topic_name.'","'.$user_name.'",'.$value['duration'].', "'.$ajax_report_token.'");\'>Excel</button>
+            </tr>';
+
+
+            //&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button></td>
+
+        //$value['uuid']
+
         }
-        
-        
-        
-        echo '<td class="text-center"><button type="button" class="btn btn-success report_btn" onclick=\'downloadPdf("'.urlencode(urlencode($value['uuid'])).'",1,"'.$topic_name.'","'.$user_name.'",'.$value['duration'].', "'.$ajax_report_token.'");\'>Excel</button>
-        </tr>';
-
-        
-        //&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button></td>
-
-    //$value['uuid']
-
-    }
     }
     echo '<tr class="table-success" style="padding-top:10px;">
         <th colspan="5">Всего конференций: <b>'.$result['total_records'].'</b></th>
