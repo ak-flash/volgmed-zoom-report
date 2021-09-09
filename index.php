@@ -117,33 +117,11 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
     <label for="InputUser">Логин в ZOOM </label>
 
 
-    <select type="email" class="form-control mx-2" id="InputUser" name="user" style="width:170px;">
-    <option value="0">Выберите...</option>
-    <?php
-        /*for ($x=1; $x<=18; $x++) {
-            if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
-            echo '<option value="'.$x.'" selected>volg***'.$x.'@***.ru</option>';
-            } else if($x!=2) echo '<option value="'.$x.'">volg***'.$x.'@***.ru</option>';
-        }*/
-
-        for ($x=1; $x<=25; $x++) {
-            if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
-                echo '<option value="'.$x.'" selected>1exam'.$x.'@volgmed.ru</option>';
-            } else
-                echo '<option value="'.$x.'">1exam'.$x.'@volgmed.ru</option>';
-        }
-
-        for ($x=26; $x<=32; $x++) {
-            if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST['user']==$x) {
-                echo '<option value="'.$x.'" selected>exam'.$x.'@volgmed.ru</option>';
-            } else
-                echo '<option value="'.$x.'">exam'.$x.'@volgmed.ru</option>';
-        }
-
-
-
-    ?>
-
+    <select type="email" class="form-control mx-2" id="InputUser" name="accountId" style="width:200px;">
+        <option value="0">Выберите...</option>
+        <?php
+            include_once 'list_of_accounts.php';
+        ?>
     </select>
     </div>
     
@@ -165,74 +143,72 @@ function downloadPdf(uid,ftype,topic,name,duration,token) {
     </div>
     <?php
 
-    if (isset($_POST['user'])&&$_POST['user']!=""&&(int)$_POST["user"] != 0) {
+    if (isset($_POST['accountId']) && @$_POST['accountId'] !== "") {
 
 
-    if((int)$_POST["user"]>=1&&(int)$_POST["user"]<=25) {
-        $ajax_report_token = 'exam_100';
-        $user = '1exam'.(int)$_POST["user"].'@volgmed.ru';
-    }
+        $account = ZOOM_ACCOUNTS[(int)$_POST['accountId']];
 
-    if((int)$_POST["user"]>=26&&(int)$_POST["user"]<=64) {
-        $ajax_report_token = 'exam_100';
-        $user = 'exam'.(int)$_POST["user"].'@volgmed.ru';
-    }
+        $date=$_POST['date'];
 
+    $result = send_api("/report/users/".$account['login']."/meetings?from=".$date."&to=".$date, "GET", $account['token']);
 
-    $date=$_POST['date'];
-
-    $result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date, "GET", $ajax_report_token);
     //var_dump($result);
 
-    if($error_message){
+    if(isset($result['error'])){
 
-        echo '<br><div class="alert alert-danger text-center" style="margin: auto;width:45%;" role="alert"><b>Ошибка:</b> ' . $error_message.'</div>';
+        echo '<br><div class="card">
+            <div class="card-body mx-auto"><br><div class="alert alert-danger text-center" role="alert"><b>Ошибка:</b> ' . $result['msg'].'</div>';
         
     }  else {
 
         echo  '<div class="row d-flex">
     
-        <div class="col-12">
-        
-        <table class="table">
-        <thead class="thead-light">
-            <tr>
-            <th scope="col" class=" text-center align-middle">№</th>
-            <th scope="col" class="col-6 text-center align-middle">Название</th>
-            <th scope="col" class="col-1 text-center align-middle">Время начала</th>
-            <th scope="col" class="col-2 text-center align-middle">Участников **</th>
-            <th scope="col" class="col-3 text-center align-middle">Скачать отчёт</th>
-            </tr>
-        </thead> <tbody>';
+                <div class="col-12">
+            
+                    <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                        <th scope="col" class=" text-center align-middle">№</th>
+                        <th scope="col" class="col-6 text-center align-middle">Название</th>
+                        <th scope="col" class="col-1 text-center align-middle">Время начала</th>
+                        <th scope="col" class="col-2 text-center align-middle">Участников **</th>
+                        <th scope="col" class="col-3 text-center align-middle">Скачать отчёт</th>
+                        </tr>
+                    </thead> 
+                    <tbody>';
 
-        foreach($result['meetings'] as $key=>$value)
+        foreach($result['meetings'] as $key => $value)
         {
 
             //$key
-            if((int)$value['duration']>25&&(int)$value['participants_count']>3){
+            if((int)$value['duration'] > 25 && (int)$value['participants_count'] > 3){
+
+
+                $timestamp = date("H:i", strtotime($value['start_time']));
+
+                echo '<tr>
+                        <th scope="row">'.($key+1).'</th>
+                        <td>'.$value['topic'].'</td>
+                        <td class="text-center">'.$timestamp.'</td>
+                        <td class="text-center">'.$value['participants_count'].'</td>';
+
+                if($value['user_name']=='') {
+                    $user_name = $account['login'];
+                } else {
+                    $user_name = $value['user_name'];
+                }
+
+                if(!empty($value['topic'])) {
+                    $topic_name = htmlspecialchars_decode($value['topic']);
+                    $topic_name=str_replace("'", "-", $topic_name);
+                    $topic_name = str_replace('&quot;', '', $topic_name);
+                    $topic_name = str_replace('"', '', $topic_name);
+                }
 
 
 
-            $timestamp=date("H:i", strtotime($value['start_time']));
-
-            echo '<tr>
-            <th scope="row">'.($key+1).'</th>
-            <td>'.$value['topic'].'</td>
-            <td class="text-center">'.$timestamp.'</td>
-            <td class="text-center">'.$value['participants_count'].'</td>';
-
-            if($value['user_name']=='') $user_name=$user; else $user_name=$value['user_name'];
-            if(!empty($value['topic'])) {
-                $topic_name = htmlspecialchars_decode($value['topic']);
-                $topic_name=str_replace("'", "-", $topic_name);
-                $topic_name = str_replace('&quot;', '', $topic_name);
-                $topic_name = str_replace('"', '', $topic_name);
-            }
-
-
-
-            echo '<td class="text-center"><button type="button" class="btn btn-success report_btn" onclick=\'downloadPdf("'.urlencode(urlencode($value['uuid'])).'",1,"'.$topic_name.'","'.$user_name.'",'.$value['duration'].', "'.$ajax_report_token.'");\'>Excel</button>
-            </tr>';
+                echo '<td class="text-center"><button type="button" class="btn btn-success report_btn" onclick=\'downloadPdf("'.urlencode(urlencode($value['uuid'])).'",1,"'.$topic_name.'","'.$user_name.'",'.$value['duration'].', "'.$account['token'].'");\'>Excel</button>
+                </tr>';
 
 
             //&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button></td>

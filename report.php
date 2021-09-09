@@ -1,5 +1,10 @@
 <?php
+require 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 session_start();
+date_default_timezone_set('Europe/Volgograd');
 
 if(!isset($_SESSION['password']))
 {
@@ -7,12 +12,8 @@ if(!isset($_SESSION['password']))
     exit;
 }
 
-date_default_timezone_set('Europe/Volgograd');
 
-require 'vendor/autoload.php';
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 function sort_nested_arrays($array, $args = array('name' => 'asc','join_time' => 'asc') ) {
 	
@@ -140,8 +141,7 @@ if (!empty($_POST['uid'])) {
 		// Комментарии справа
 		$comm_offcet=17;
 
-		$sheet->setCellValue('H'.$comm_offcet, 'Лайфхак: определение "Онлайн прогульщиков"');
-		$sheet->getComment('H'.$comm_offcet)->getText()->createTextRun('Данная категория студентов в конференции ZOOM присутствует, но лектора  не смотрят и не слушают. После окончания лекции можно подождать минуть 10: те студенты, которые смотрели лекцию, как правило, выходят из конференции. Но остаются студенты, которые висят в конференции до последнего. Можно сделать логическое заключение: данные студенты просто зашли в конференцию, оставилили гаджеты включенными и отошли по делам. В отчёте у данных студентов время выхода будет соответствовать вашему (имя лектора в отчёте имеет вид: "ВолгГМУ** ВолгГМУ**") минуту в минуту (сразу видно таких студентов). PS: НЕ является педагогической рекомендацией! Лишь предположение, основанное на логических заключениях и не может исключать других возможных причин у студента не покидать конференцию ZOOM');
+
 		$sheet->mergeCells('H'.$comm_offcet.':J'.($comm_offcet+1));
 		$sheet->getStyle('H'.$comm_offcet)->getAlignment()->setWrapText(true);
 		$sheet->getStyle('H'.$comm_offcet)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -265,4 +265,3 @@ if (!empty($_POST['uid'])) {
 	}
 
 }
-?>

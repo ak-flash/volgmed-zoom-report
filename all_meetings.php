@@ -117,81 +117,11 @@ $date_end=$_POST['date_end'];
 $total_num=0;
 $x=0;
 
-while ($x++<=91) {
+while ($x++ < count(ZOOM_ACCOUNTS)) {
 
+    $account = ZOOM_ACCOUNTS[$x];
 
-if($x<=17) {
-
-    $ajax_report_token = 'volgmed';
-
-switch($x){
-	case 1:
-        $user='volgmed1@mail.ru';
-        break;
-	case 2:
-        $user='volgmed3@mail.ru';
-        break;
-	case 3:
-        $user='volgmed4@mail.ru';
-        break;
-	case 4:
-        $user='volgmed5@mail.ru';
-        break;
-	case 5:
-        $user='volgmed6@bk.ru';
-        break;
-	case 6:
-        $user='volggmu7@mail.ru';
-        break;
-	case 7:
-        $user='volgmed8@bk.ru';
-        break;
-	case 8:
-        $user='volggmu9@bk.ru';
-        break;	
-	case 9:
-        $user='volggmu10@bk.ru';
-        break;
-	case 10:
-        $user='volggmu11@bk.ru';
-        break;
-	case 11:
-        $user='volggmu12@bk.ru';
-        break;
-	case 12:
-        $user='volggmu13@bk.ru';
-        break;
-	case 13:
-        $user='volggmu14@bk.ru';
-        break;
-	case 14:
-        $user='volggmu15@bk.ru';
-        break;
-	case 15:
-        $user='volggmu16@bk.ru';
-        break;
-	case 16:
-        $user='volggmu17@bk.ru';
-        break;
-	case 17:
-        $user='volggmu18@bk.ru';
-        break;
-  }
-
-} else if($x <= (60-12)) { // skip 12 beetwen exam17 and exam30
-    $ajax_report_token = 'exam_30-60_95-120';
-    $user='exam'.($x+12).'@volgmed.ru';
-} else if($x <= (78-12)) { // skip 0 beetwen exam60 and exam61
-    $ajax_report_token = 'exam_61-78';
-    $user = 'exam'.($x+12).'@volgmed.ru';
-} else if($x <= (120-28)) { // skip 28 beetwen exam78 and exam95
-    $ajax_report_token = 'exam_30-60_95-120';
-    $user='exam'.($x+28).'@volgmed.ru';
-}
-
-
-
-$result=send_api("/report/users/".$user."/meetings?from=".$date."&to=".$date_end, "GET",$ajax_report_token);
+$result=send_api("/report/users/".$account['login']."/meetings?from=".$date."&to=".$date_end, "GET",$account['token']);
 
 if(isset($result['code'])) 
 {
@@ -215,7 +145,7 @@ echo  '<br><table class="table">
 
 
 echo '<tr>
-      <th colspan="6">Отчёт по пользователю: <b>'.$user.'</b></th>
+      <th colspan="6">Отчёт по пользователю: <b>'.$account['login'].'</b></th>
        </tr>';
  $num=0; 
 foreach($result['meetings'] as $key=>$value)
@@ -236,7 +166,7 @@ foreach($result['meetings'] as $key=>$value)
 	  echo '<td class="text-center">'.$timestamp_s.' - '.$timestamp_e;
 	  if($date!=$date_end) echo ' <font size="2">('.$datestamp.')</font>';
       
-	  if($value['user_name']=='') $user_name=$user; else $user_name=$value['user_name'];
+	  if($value['user_name']=='') $user_name=$account['login']; else $user_name=$value['user_name'];
 	  
 	  echo '</td><td class="text-center">'.$value['participants_count'].'</td>
 	  <td class="text-center">'.$value['duration'].' мин. ';
@@ -248,7 +178,7 @@ foreach($result['meetings'] as $key=>$value)
   		printf('(%02d:%02d)', $hours, $minutes);
 		}
 		
-	  	echo '</td><td class="text-center"><button type="button" class="btn btn-success report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',1,\''.str_replace("'", "-", $value['topic']).'\',\''.$user_name.'\','.$value['duration'].', \''.$ajax_report_token.'\')">Excel</button> <!--- &nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button> ---></td>
+	  	echo '</td><td class="text-center"><button type="button" class="btn btn-success report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',1,\''.str_replace("'", "-", $value['topic']).'\',\''.$user_name.'\','.$value['duration'].', \''.$account['token'].'\')">Excel</button> <!--- &nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(\''.urlencode(urlencode($value['uuid'])).'\',2,\''.$value['topic'].'\',\''.str_replace("'", "-", $value['topic']).'\','.$value['duration'].')" disabled>Word</button> ---></td>
     </tr>';
 	
 	$num++;
@@ -276,7 +206,9 @@ echo '<tr>
 } 
 
 echo '<tr class="table-success" style="padding-top:15px;">
-      <th colspan="4" class="text-center h4">Всего конференций за день: <b>'.$total_num.'</b></th><td class="text-center" colspan="2"><!-- Общий отчёт:&nbsp;&nbsp;<button type="button" class="btn btn-success report_btn" onclick="downloadPdf(0,3,0)" disabled>Excel</button>&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(0,4,0)" disabled>Word</button> --!> </td>
+      <th colspan="4" class="text-center h4">Всего конференций за день: <b>'.$total_num.'</b></th><td class="text-center" colspan="2">
+      <!-- Общий отчёт:&nbsp;&nbsp;<button type="button" class="btn btn-success report_btn" onclick="downloadPdf(0,3,0)" disabled>Excel</button>&nbsp;&nbsp;<button type="button" class="btn btn-primary report_btn" onclick="downloadPdf(0,4,0)" disabled>Word</button> --!> 
+      </td>
        </tr></tbody>
 </table>
 <div class="text-justify mb-3 mx-4">* - данная цифра может не соответствовать реальному количеству участников, здесь указано количество подключений к лекции каждого студента (один студент может быть посчитан несколько раз,если он отключается и заходит снова в конференцию). <b>В файле отчёта будет указано реальное кол-во студентов</b><br>
