@@ -31,12 +31,14 @@ function checkToken($token, $api_url) {
     if (DEBUG === 1) {
         echo 'Запрос: <b>'.$response_temp.'</b>';
     }
+	
+
 
 
 	curl_close($curl);
 		
-	if(isset($result_temp['code'])){
-        return false;
+	if(isset($response_temp['code'])){
+        echo 'Ошибка: <b>'.$response_temp['message'].'</b>';
 	} else {
 		return $token;
 	}

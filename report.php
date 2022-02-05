@@ -103,13 +103,9 @@ if (!empty($_POST['uid'])) {
 		$sheet->setCellValue('J'.($num_offcet+4), '* - статистика может быть искажена, если студент изменял Имя в процессе лекции');
 
 		//добавляем лог в конец файла
-		if(isset($_SERVER['HTTP_REFERER'])) {
-			$referer=$_SERVER['HTTP_REFERER'];
-		} else {
-			$referer='none';
-		}
+
 		
-		file_put_contents("logs.txt", date("d/m/Y H:i:s").' - Получен отчёт за '.$_POST['date'].' Пользователь: '.$user_name.' - Тема: "'.$topic.'" (IP: '.$_SERVER['REMOTE_ADDR'].'; '.$referer.')'.PHP_EOL, FILE_APPEND | LOCK_EX);
+		file_put_contents("logs.txt", date("d/m/Y H:i:s").' - Получен отчёт за '.$_POST['date'].' Пользователь: '.$user_name.' - Тема: "'.$topic.'" (IP: '.$_SERVER['REMOTE_ADDR'].')'.PHP_EOL, FILE_APPEND | LOCK_EX);
 
 		$sheet->getColumnDimension('A')->setWidth(5);
 

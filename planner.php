@@ -133,7 +133,7 @@ require('load.php');
 
         if (isset($result['code'])) {
 
-            echo '<br><div class="alert alert-danger text-center" style="margin: auto;width:45%;" role="alert"><b>Ошибка:</b> ' . $result['message'] . '</div>';
+            echo '<br><div class="alert alert-danger text-center" style="margin: auto;" role="alert"><b>Ошибка:</b> ' . $result['message'] . '</div>';
 
         } else {
             $zoomId = wordwrap($result['id'], 3, ' ', true);
@@ -150,12 +150,10 @@ require('load.php');
     <a href='" . $result['join_url'] . "' class='pr-4'>" . $result['join_url'] . "</a>
     <button type='button' class='btn btn-info' onclick='copyToClipboard(\"".$result['join_url']."\")'>Скопировать</button>
 </div>
-
-
 </td></tr>";
             echo "<tr><th>Пароль для студентов: </th><td>" . $result['password'] . "</td></tr>";
 
-            //echo "<tr class='table-danger'><th>Прямая ссылка для начала конференции: </th><td><a href='".$result['start_url']."'>Только для лектора, позволяет запустить конференцию без входа в аккаунт (ввода логина и пароля). Но только с компьютера, с которого была создана конференция.</a></td></tr>";
+            echo "<tr class='table-danger'><th>Прямая ссылка для начала конференции: </th><td><a href='".$result['start_url']."'>Только для лектора, позволяет запустить конференцию без входа в аккаунт (ввода логина и пароля). Но только с компьютера, с которого была создана конференция.</a></td></tr>";
 
             echo "</tbody></table>";
         }
