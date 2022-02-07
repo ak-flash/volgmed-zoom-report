@@ -1,4 +1,8 @@
 <?php
+require 'vendor/autoload.php';
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
 include('config.php');
 
 // Turn off all error reporting
@@ -110,4 +114,19 @@ function send_api($api_url, $api_data, $token) {
     }
 
     return false;
+}
+
+function getZoomStartUrl($meeting_id, $account_id) {
+    $payload = array(
+        "account_id" => $account_id,
+        "meeting_id" => $meeting_id,
+    );
+
+    $jwt = JWT::encode($payload, JWT_APP_TOKEN, 'HS256');
+
+    return "https://".$_SERVER['SERVER_NAME']."/getStartUrl.php?meetingId=".$meeting_id."&token=".$jwt;
+}
+
+function decodeTokenForZoomStartUrl($token) {
+    return JWT::decode($token, new Key(JWT_APP_TOKEN, 'HS256'));
 }

@@ -18,6 +18,9 @@ require('load.php');
 <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
 
@@ -58,7 +61,7 @@ require('load.php');
                         <select type="email" class="form-control mx-3" id="InputUser" name="accountId"
                                 style="width:200px">
                             <?php
-                            include_once 'list_of_accounts.php';
+                                include_once 'list_of_accounts.php';
                             ?>
 
                         </select>
@@ -138,24 +141,38 @@ require('load.php');
         } else {
             $zoomId = wordwrap($result['id'], 3, ' ', true);
 
-            echo "<table class='table table-striped table-responsive-md mb-4'>
+            $copyImage = '<svg xmlns="http://www.w3.org/2000/svg" style="width: 30px; height: 30px; color: cornflowerblue;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+</svg>';
+
+            echo "<table class='table table-striped table-responsive-md mb-5'>
         <tbody><tr><th>Логин Zoom: </th><td>" . $result['host_email'] . "</td></tr>";
             echo "<tr><th>Название: </th><td>" . $result['topic'] . "</td></tr>";
-            echo "<tr><th>Идентификатор конференции: </th><td>" .$zoomId. "
-<button type='button' class='btn btn-info ml-4' onclick='copyToClipboard(\"".$zoomId."\")'>Скопировать</button>
+            echo "<tr><th>Идентификатор конференции: </th><td>
+<div class='d-flex align-items-center'>" .$zoomId. "
+<button type='button' class='btn ml-4' data-toggle='tooltip' data-placement='top' title='Нажмите для копирования в буфер обмена' onclick='copyToClipboard(\"".$zoomId."\")'>".$copyImage."</button>
+</div>
 </td></tr>";
 
             echo "<tr><th>Ссылка для студентов: </th><td>
 <div class='d-flex'>
     <a href='" . $result['join_url'] . "' class='pr-4'>" . $result['join_url'] . "</a>
-    <button type='button' class='btn btn-info' onclick='copyToClipboard(\"".$result['join_url']."\")'>Скопировать</button>
+    <button type='button' class='btn' data-toggle='tooltip' data-placement='top' title='Нажмите для копирования в буфер обмена' onclick='copyToClipboard(\"".$result['join_url']."\")'>".$copyImage."</button>
 </div>
 </td></tr>";
             echo "<tr><th>Пароль для студентов: </th><td>" . $result['password'] . "</td></tr>";
 
-            echo "<tr class='table-danger'><th>Прямая ссылка для начала конференции: </th><td><a href='".$result['start_url']."'>Только для лектора, позволяет запустить конференцию без входа в аккаунт (ввода логина и пароля). Но только с компьютера, с которого была создана конференция.</a></td></tr>";
+            $zoomMeetingStartUrl = getZoomStartUrl($result['id'], (int)$_POST['accountId']);
+
+            echo "<tr class='table-danger'><th>Прямая ссылка для начала конференции: </th><td>
+                    <div class='d-flex'>
+                        <a href='".$zoomMeetingStartUrl."'>ТОЛЬКО для ЛЕКТОРА, позволяет запустить конференцию без входа в аккаунт (ввода логина и пароля). Тестовая функция</a>
+                        <button type='button' class='btn' data-toggle='tooltip' data-placement='top' title='Нажмите для копирования в буфер обмена' onclick='copyToClipboard(\"".$zoomMeetingStartUrl."\")'>".$copyImage."</button>
+                    </div>
+                </td></tr>";
 
             echo "</tbody></table>";
+
         }
 
     } else {
@@ -170,6 +187,18 @@ require('load.php');
 </div>
 
 <script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+
+        $('[data-toggle="tooltip"]').click(function(){
+            $(this).tooltip('hide').attr('data-original-title', 'Скопировано!').tooltip('show');
+        });
+
+        $('.btn').mouseleave(function() {
+            $(this).tooltip('hide').attr('data-original-title', 'Нажмите для копирования в буфер обмена');
+        });
+    })
+
     function copyToClipboard(text) {
         const el = document.createElement('textarea');
         el.value = text;
@@ -178,6 +207,7 @@ require('load.php');
         document.execCommand('copy');
         document.body.removeChild(el);
     }
+
 </script>
 </body>
 </html>
