@@ -52,60 +52,96 @@ require('load.php');
 
     <div class="container col-md-8">
 
-        <form action="#" method="POST" class="mx-3">
+        <form action="#" method="POST" class="">
 
-            <div class="row mx-auto">
-                <div class="col">
-                    <div class="form-group text-left">
-                        <label for="InputUser">Логин (ZOOM)</label>
-                        <select type="email" class="form-control mx-3" id="InputUser" name="accountId"
-                                style="width:200px">
-                            <?php
+            <div class="card p-4">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group text-left">
+                            <label for="InputUser">Логин (ZOOM)</label>
+                            <select type="email" class="form-control mx-3" id="InputUser" name="accountId"
+                                    style="width:200px">
+                                <?php
                                 include_once 'list_of_accounts.php';
-                            ?>
+                                ?>
 
-                        </select>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group text-left">
+                            <label for="InputDate">Дата: </label>
+                            <input type="date" class="form-control mx-3" id="InputDate" name="date" style="width:150px" value="<?=$_POST['date'] ?>">
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group text-left">
+                            <label for="InputTime">Время: </label>
+                            <input type="time" class="form-control mx-3" id="InputTime" name="time" style="width:100px">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row mt-2">
+                    <div class="col-8">
+                        <div class="form-group text-left">
+                            <label for="InputTopic">Название: </label>
+                            <input type="text" class="form-control mx-3" id="InputTopic" name="topic">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group text-left pl-1">
+                            <label for="InputPassword">Пароль: </label>
+                            <input type="text" class="form-control mx-3" id="InputPassword" name="password" value="123"
+                                   style="width:100px;">
+                        </div>
                     </div>
                 </div>
 
-                <div class="col">
-                    <div class="form-group text-left">
-                        <label for="InputDate">Дата: </label>
-                        <input type="date" class="form-control mx-3" id="InputDate" name="date" style="width:150px" value="<?=$_POST['date'] ?>">
-                    </div>
-                </div>
 
-                <div class="col">
-                    <div class="form-group text-left">
-                        <label for="InputTime">Время: </label>
-                        <input type="time" class="form-control mx-3" id="InputTime" name="time" style="width:100px">
-                    </div>
-                </div>
 
+                <div class="row px-4">
+                    <div class="card col-6 mt-2 py-2">
+
+                        <div class="form-check text-left px-5 mt-1">
+                            <input class="form-check-input" type="checkbox" value="1" id="InputType" name="recurrent">
+                            <label class="form-check-label" for="InputType">
+                                Повторяющаяся (бессрочно)
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-success w-50 mt-2 py-2">Создать</button>
+                    </div>
+                        <!--<div class="col-9">
+                        <div class="form-group row">
+                            <label for="InputRecurrentCount" class="mt-1">кол-во повторений</label>
+                            <select class="form-control mx-3" id="InputRecurrentCount" name="recurrent_count" style="width:80px">
+                                <?php
+                        /*                                for ($i = 20; $i >= 1; $i--) {
+                                                            echo '<option value="'.$i.'" selected>'.$i.'</option>';
+                                                        }
+                                                        */?>
+
+                            </select>
+                        </div>
+                    </div>-->
+
+
+                </div>
             </div>
 
 
-            <div class="row mt-3 mx-auto">
-                <div class="col-8">
-                    <div class="form-group text-left">
-                        <label for="InputTopic">Название: </label>
-                        <input type="text" class="form-control mx-3" id="InputTopic" name="topic">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-group text-left">
-                        <label for="InputPassword">Пароль: </label>
-                        <input type="text" class="form-control mx-3" id="InputPassword" name="password" value="123"
-                               style="width:100px;">
-                    </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col">
-                    <button type="submit" class="btn btn-success m-2">Создать</button>
-                </div>
-            </div>
+
+
+
 
     </div>
 
@@ -123,10 +159,29 @@ require('load.php');
         $time = htmlspecialchars(strip_tags($_POST['time']));
         $topic = htmlspecialchars(strip_tags($_POST['topic']));
         $password = htmlspecialchars(strip_tags($_POST['password']));
+        $recurrent = (int) $_POST['recurrent'];
+        $recurrentCount = (int) $_POST['recurrent_count'];
 
         $account = ZOOM_ACCOUNTS[(int)$_POST['accountId']];
 
-        $payload = array("topic" => $topic, "type" => 2, "start_time" => $date . "T" . $time . ":00", "duration" => 100, "password" => $password, "settings" => array("join_before_host" => true, "host_video" => false, "participant_video" => false, "waiting_room" => false, "mute_upon_entry" => true, "approval_type" => 3, "audio" => "both", "auto_recording" => "none"));
+        $meetingType = 2;
+        $recurrenceSettings = [];
+
+        if ($recurrent) {
+            $meetingType = 3;
+            /*$meetingType = 8;
+            $recurrenceSettings = [
+                    "type" => 2,
+                    "end_times" => $recurrentCount,
+            ];
+            , "recurrence" => $recurrenceSettings*/
+
+
+        }
+
+
+
+        $payload = array("topic" => $topic, "type" => $meetingType, "start_time" => $date . "T" . $time . ":00", "duration" => 100, "password" => $password, "settings" => array("join_before_host" => true, "host_video" => false, "participant_video" => false, "waiting_room" => false, "mute_upon_entry" => true, "approval_type" => 3, "audio" => "both", "auto_recording" => "none"));
 
         $result = send_api("/users/" . $account['login'] . "/meetings", $payload, $account['token']);
         //var_dump($result);
